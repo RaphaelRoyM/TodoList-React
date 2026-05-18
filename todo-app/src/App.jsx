@@ -7,8 +7,17 @@ function App() {
   const [todos, setTodos] = useState([]);
 
   function addTodo() {
+
+    if (task.trim() === "") return;//if trim is not used then " " empty space is considered as a task and it will be added to the list of todos
     setTodos([...todos, task]);
     setTask("");
+  }
+
+  function deleteTodo(index) {
+    const updatedTodos = todos.filter((todos, index) => {//why splice is not used because splice mutates the original array and filter returns a new array without mutating the original array
+      return index !== indexToDelete
+    });
+    setTodos(updatedTodos);
   }
 
   return (
@@ -21,10 +30,15 @@ function App() {
 
       <button onClick={addTodo}>Add Todo</button>
 
+
       <ul>
         {
-          todos.map((todos, index) => (
-            <li key={index} >{todos}</li>
+          todos.map((todo, index) => (
+            <li key={index} >{todo}
+              <button onClick={() => deleteTodo(index)}>
+                Delete
+              </button>
+            </li>
           ))
         }
       </ul>
