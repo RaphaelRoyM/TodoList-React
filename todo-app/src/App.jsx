@@ -1,5 +1,6 @@
 import { useState } from "react";
-
+import TodoForm from "./components/TodoForm";
+import TodoList from "./components/TodoList";
 
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
           completed: !todo.completed
         };
       }
+      return todo;
     });
     setTodos(updatedTodos);
   }
@@ -41,34 +43,18 @@ function App() {
       <h1>
         Todo App
       </h1>
-      <input type="text" placeholder="Enter a task" value={task} onChange={(e) => setTask(e.target.value)} />
-      <p>{task}</p>
 
-      <button onClick={addTodo}>Add Todo</button>
+      <TodoForm
+        task={task}
+        setTask={setTask}
+        addTodo={addTodo}
+      />
 
-
-      <ul>
-        {
-          todos.map((todo, index) => (
-            <li key={index} >
-              <span>
-                {
-                  todo.completed ? "✅" : "❌"
-                }
-                {todo.text}
-              </span>
-
-              <button onClick={() => deleteTodo(index)}>
-                Delete
-              </button>
-              <button onClick={() => toggleComplete(index)}>
-                Mark Completed
-              </button>
-
-            </li>
-          ))
-        }
-      </ul>
+      <TodoList
+        todos={todos}
+        deleteTodo={deleteTodo}
+        toggleComplete={toggleComplete}
+      />
     </div>
   )
 }
