@@ -1,0 +1,8 @@
+HTTP METHODS SO FAR
+
+Method	Purpose
+
+GET	Read data
+POST	Create data
+PUT	Update data
+DELETE	Remove data
