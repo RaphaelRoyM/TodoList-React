@@ -1,11 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TodoForm from "./components/TodoForm";
 import TodoList from "./components/TodoList";
 
 
 function App() {
   const [task, setTask] = useState("");
-  const [todos, setTodos] = useState([]);
+  // const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState(() => {
+    const savedTodos = localStorage.getItem("todos");
+    return savedTodos ? JSON.parse(savedTodos) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
+
+
 
   function addTodo() {
 
@@ -58,5 +68,4 @@ function App() {
     </div>
   )
 }
-export default App
-//hello
+export default App;
