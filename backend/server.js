@@ -5,7 +5,7 @@ app.use(cors());// use cors middleware to allow cross-origin requests from the f
 app.use(express.json());
 
 // we can use an array to store the todos in memory. This is just for demonstration purposes. In a real application, you would use a database to store the todos.
-const todos = [
+let todos = [
   {
     id: 1,
     text: "Study React",
@@ -18,17 +18,14 @@ const todos = [
   }
 ];
 
-app.get("/todos", (req, res) => {
-  res.json(todos);// send the todos as a JSON response. if we use res.send(todos) then it will send the todos as a string and it will not be parsed as a JSON object in the client side. so we need to use res.json(todos) to send the todos as a JSON response.
-  //in fronted we can use fetch("/todos") to get the todos from the server and then we can use response.json() to parse the response as a JSON object and then we can use the todos in our app.
-});
-
-
 app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-
+app.get("/todos", (req, res) => {
+  res.json(todos);// send the todos as a JSON response. if we use res.send(todos) then it will send the todos as a string and it will not be parsed as a JSON object in the client side. so we need to use res.json(todos) to send the todos as a JSON response.
+  //in fronted we can use fetch("/todos") to get the todos from the server and then we can use response.json() to parse the response as a JSON object and then we can use the todos in our app.
+});
 
 app.post("/todos", (req, res) => {
   const newTodo = {
@@ -39,6 +36,23 @@ app.post("/todos", (req, res) => {
   todos.push(newTodo);
   res.json(newTodo);
 });
+
+
+app.delete("/todos/:id", (req, res) => {//:id is dynamic parameter . we use req.params.id to use it.
+  const todoId = parseInt(req.params.id);
+  const updatedTods = todos.filter((todo) => {
+    return todo.id !== todoId;
+  });
+  todos = updatedTods;
+  res.json(
+    { message: "Todo deleted successfully" }
+  );
+});
+
+
+
+
+
 
 
 

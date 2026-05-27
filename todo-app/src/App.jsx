@@ -19,23 +19,14 @@ function App() {
   // }, [todos]);
 
   async function fetchTodos() {
-    const response = await fetch("http://localhost:5000/todos");
-    const data = await response.json();
+    const response = await fetch("http://localhost:5000/todos");//fetch is a method that sends a request to the server and returns a promise that resolves to the response. since we are using database to store the todos, we need to fetch the todos from the server when the component mounts.
+    const data = await response.json();//response.json() is a method that parses the response body as json and returns a promise that resolves to a js object. since we are using database to store the todos, we need to fetch the todos from the server when the component mounts.
     setTodos(data);
   }
 
   async function addTodo() {
 
     if (task.trim() === "") return;//if trim is not used then " " empty space is considered as a task and it will be added to the list of todos
-
-
-
-    // setTodos([...todos,
-    // {
-    //   text: task,
-    //   completed: false
-    // }
-    // ]);
 
     await fetch("http://localhost:5000/todos", {
       method: "POST",
@@ -54,11 +45,15 @@ function App() {
     fetchTodos();
   }, []);// when the component mounts, we fetch the todos from the server and set the todos state with the fetched data. since we are using database to store the todos, we need to fetch the todos from the server when the component mounts. But if we are using local storage to persist the todos, we don't need to fetch the todos from the server when the component mounts. We can just initialize the state from local storage when the component mounts.
 
-  function deleteTodo(indexToDelete) {
-    const updatedTodos = todos.filter((todo, index) => {//why splice is not used because splice mutates the original array and filter returns a new array without mutating the original array
-      return index !== indexToDelete;
+  async function deleteTodo(idToDelete) {
+    // const updatedTodos = todos.filter((todo, index) => {//why splice is not used because splice mutates the original array and filter returns a new array without mutating the original array
+    //   return index !== indexToDelete;
+    // });
+    await fetch(`http://localhost:5000/todos/${idToDelete}`, {
+      method: "DELETE"
     });
-    setTodos(updatedTodos);
+
+    await fetchTodos();
   }
 
   function toggleComplete(indexToToggle) {

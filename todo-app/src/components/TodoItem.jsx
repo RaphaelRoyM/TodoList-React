@@ -7,11 +7,11 @@ function TodoItem({ todo, index, deleteTodo, toggleComplete }) {
         {todo.text}
       </span>
 
-      <button onClick={() => deleteTodo(index)}>
+      <button onClick={() => deleteTodo(todo.id)}>
         Delete
       </button>
 
-      <button onClick={() => toggleComplete(index)}>
+      <button onClick={() => toggleComplete(todo.id)}>
         Mark Completed
       </button>
 
