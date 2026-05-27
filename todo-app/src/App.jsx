@@ -56,17 +56,11 @@ function App() {
     await fetchTodos();
   }
 
-  function toggleComplete(indexToToggle) {
-    const updatedTodos = todos.map((todo, index) => {
-      if (index === indexToToggle) {
-        return {
-          ...todo,
-          completed: !todo.completed
-        };
-      }
-      return todo;
+  async function toggleComplete(idToToggle) {
+    await fetch(`http://localhost:5000/todos/${idToToggle}`, {
+      method: "PUT"
     });
-    setTodos(updatedTodos);
+    await fetchTodos();
   }
   return (
     <div>

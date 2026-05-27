@@ -29,7 +29,7 @@ app.get("/todos", (req, res) => {
 
 app.post("/todos", (req, res) => {
   const newTodo = {
-    id: todos.length + 1,
+    id: Date.now(),// generate a unique id for the new todo using the current timestamp. This is just for demonstration purposes. In a real application, you would use a database to generate unique ids for the todos.
     text: req.body.text,
     completed: false
   };
@@ -50,7 +50,24 @@ app.delete("/todos/:id", (req, res) => {//:id is dynamic parameter . we use req.
 });
 
 
+app.put("/todos/:id", (req, res) => {
+  const todoId = parseInt(req.params.id);
+  const updatedTodos = todos.map((todo) => {
+    if (todo.id === todoId) {
+      return {
+        ...todo,
+        completed: !todo.completed
+      };
+    }
+    return todo;
+  });
 
+  todos = updatedTodos;
+
+  res.json({
+    message: "Todo updated successfully"
+  });
+});
 
 
 
