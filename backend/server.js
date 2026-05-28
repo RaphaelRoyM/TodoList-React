@@ -6,18 +6,7 @@ app.use(express.json());
 const db = require("./db");
 
 // we can use an array to store the todos in memory. This is just for demonstration purposes. In a real application, you would use a database to store the todos.
-let todos = [
-  {
-    id: 1,
-    text: "Study React",
-    completed: false
-  },
-  {
-    id: 2,
-    text: "Learn Express",
-    completed: true
-  }
-];
+
 
 app.get("/", (req, res) => {
   res.send("Hello World");
@@ -60,33 +49,40 @@ app.post("/todos", (req, res) => {
 
 
 app.delete("/todos/:id", (req, res) => {//:id is dynamic parameter . we use req.params.id to use it.
+
   const todoId = parseInt(req.params.id);
-  const updatedTods = todos.filter((todo) => {
-    return todo.id !== todoId;
+
+  const sql = "DELETE FROM todos WHERE id = ?";
+  db.query(sql, [todoId], (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json({
+        message: "Failed to delete todo from database"
+      });
+      return;
+    }
+    res.json({
+      message: "Todo deleted successfully"
+    });
   });
-  todos = updatedTods;
-  res.json(
-    { message: "Todo deleted successfully" }
-  );
 });
 
 
 app.put("/todos/:id", (req, res) => {
   const todoId = parseInt(req.params.id);
-  const updatedTodos = todos.map((todo) => {
-    if (todo.id === todoId) {
-      return {
-        ...todo,
-        completed: !todo.completed
-      };
+
+  const sql = `UPDATE todos SET completed = NOT completed WHERE id=?`;
+  db.query(sql, [todoId], (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json({
+        message: "Failed to update todo in database"
+      });
+      return;
     }
-    return todo;
-  });
-
-  todos = updatedTodos;
-
-  res.json({
-    message: "Todo updated successfully"
+    res.json({
+      message: "Todo updated successfully"
+    });
   });
 });
 

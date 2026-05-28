@@ -1,4 +1,5 @@
 function TodoItem({ todo, index, deleteTodo, toggleComplete }) {
+  console.log(todo);
   return (
     <li>
 
