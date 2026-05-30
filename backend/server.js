@@ -4,12 +4,55 @@ const app = express();// create an instance of express application
 app.use(cors());// use cors middleware to allow cross-origin requests from the frontend application. This is necessary because the frontend and backend are running on different ports (frontend on port 3000 and backend on port 5000). Without this, the browser will block the requests from the frontend to the backend due to CORS policy.cross-origin resource sharing (CORS)
 app.use(express.json());
 const db = require("./db");
+const bcrypt = require("bcrypt");
 
 // we can use an array to store the todos in memory. This is just for demonstration purposes. In a real application, you would use a database to store the todos.
 
 
 app.get("/", (req, res) => {
   res.send("Hello World");
+});
+
+app.post("/signup", async (req, res) => {
+  const { name, email, password } = req.body;
+  if (!name || !email || !password) {
+    res.status(400).json({
+      message: "All fields are required"
+    });
+  }
+
+  const checkSql = "SELECT * FROM users WHERE email=?";
+  db.query(checkSql, [email], async (err, result) => {
+    if (err) {
+      res.status(500).json({
+        message: "DB error"
+      });
+    }
+    if (result.length > 0) {
+      res.status(400).json({
+        message: "User already exists"
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const insertSql = "INSERT INTO users (name,email,password) VALUES (?,?,?)";
+
+    db.query(insertSql, [name, email, hashedPassword], (err, result) => {
+      if (err) {
+        res.status(500).json({
+          message: "DB error. Failed to create user"
+        });
+      }
+      res.json({
+        message: "User created successfully",
+        userId: result.insertId
+      });
+    });
+
+  });
+
+
 });
 
 app.get("/todos", (req, res) => {
